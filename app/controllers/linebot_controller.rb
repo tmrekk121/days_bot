@@ -23,10 +23,10 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          if REDIS.get(event.source['id'])
+          if REDIS.get(event.source['userId'])
             # TODO: clientに日付要求
           else
-            REDIS.set(event.source['id'], event.message['text'])
+            REDIS.set(event.source['userId'], event.message['text'])
             logger.debug('else')
           end
           message = {
