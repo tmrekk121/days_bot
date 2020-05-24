@@ -25,7 +25,7 @@ class LinebotController < ApplicationController
           # @redis.set(event.message['id'], event.message['text'])
           message = {
             type: 'text',
-            text: event.message['text'] + 'だね！日付はいつ？'
+            text: event.message['text']# + 'だね！日付はいつ？'
           }
           client.reply_message(event['replyToken'], message)
         end
