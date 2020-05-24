@@ -17,15 +17,16 @@ class LinebotController < ApplicationController
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     head :bad_request unless client.validate_signature(body, signature)
 
+    events = client.parse_events_from(body)
     events.each do |event|
       case event
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          # @redis.set(event.message['id'], event.message['text'])
+          @redis.set(event.message['id'], event.message['text'])
           message = {
             type: 'text',
-            text: event.message['text']# + 'だね！日付はいつ？'
+            text: event.message['text'] + 'だね！日付はいつ？'
           }
           client.reply_message(event['replyToken'], message)
         end
