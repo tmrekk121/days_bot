@@ -22,6 +22,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          @redis.set(event.message['id'], event.message['text'])
           message = {
             type: 'text',
             text: event.message['text'] + 'だね！日付はいつ？'
