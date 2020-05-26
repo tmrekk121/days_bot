@@ -24,19 +24,45 @@ class LinebotController < ApplicationController
         case event.type
         when Line::Bot::Event::MessageType::Text
           if REDIS.get(event['source']['userId'])
-            # TODO: clientに日付要求
+            convert_date = day_convert(event.message['text'])
+            if convert_date.nil?
+              message_content = 'いつかわからないよ。正しい日付を入力してね。'
+            else
+              message_content = convert_date + 'だね。登録完了！'
+            end
           else
             REDIS.set(event['source']['userId'], event.message['text'])
-            logger.debug('else')
+            message_content = event.message['text'] + 'だね！日付はいつ？'
           end
-          message = {
-            type: 'text',
-            text: event.message['text'] + 'だね！日付はいつ？'
-          }
-          client.reply_message(event['replyToken'], message)
+          send_message(event['replyToken'], message_content)
         end
       end
     end
     head :ok
+  end
+
+  private
+
+  def day_convert(message)
+    case message
+    when '今日', 'きょう'
+      Date.current
+    when '明日', 'あした'
+      Date.tomorrow
+    when '明後日', 'あさって'
+      Date.tomorrow.tomorrow
+    when '昨日', 'きのう'
+      Date.yesterday
+    when '一昨日', 'おととい'
+      Date.yesterday.yesterday
+    end
+  end
+
+  def send_message(token, value)
+    message = {
+      type: 'text',
+      text: value
+    }
+    client.reply_message(token, message)
   end
 end
