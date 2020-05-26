@@ -28,7 +28,7 @@ class LinebotController < ApplicationController
             if convert_date.nil?
               message_content = 'いつかわからないよ。正しい日付を入力してね。'
             else
-              message_content = convert_date + 'だね。登録完了！'
+              message_content = convert_date.strftime("%Y/%m/%d %H:%M:%S") + 'だね。登録完了！'
             end
           else
             REDIS.set(event['source']['userId'], event.message['text'])
