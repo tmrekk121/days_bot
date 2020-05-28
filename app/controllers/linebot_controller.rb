@@ -69,19 +69,20 @@ class LinebotController < ApplicationController
   end
 
   def send_message(token, value)
-    message = [{
-      type: 'text',
-      text: value
-    }]
+    # message = [{
+    #   type: 'text',
+    #   text: value
+    # }]
+    message = value 
     client.reply_message(token, message)
   end
 
   def create_message_array(posts)
     message_array = []
-    posts.each do |message|
+    posts.each do |post|
       sample = {
         type: 'text',
-        text: message
+        text: post.content
       }
       message_array.push(sample)
     end
