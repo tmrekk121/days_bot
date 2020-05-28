@@ -24,7 +24,7 @@ class LinebotController < ApplicationController
         case event.type
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
-            @posts = Post.find_by(user_id: event['source']['userId'])
+            @posts = Post.where(user_id: event['source']['userId'])
             message_content = create_message_array(@posts)
           else
             if REDIS.get(event['source']['userId'])
