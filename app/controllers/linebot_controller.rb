@@ -23,21 +23,26 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          if REDIS.get(event['source']['userId'])
-            convert_date = day_convert(event.message['text'])
-            if convert_date.nil?
-              message_content = 'いつかわからないよ。正しい日付を入力してね。'
-            else
-              @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
-              message_content = if @post.save
-                                  convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！'
-                                else
-                                  'もう一度日付を入力してね！'
-                                end
-            end
+          if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
+            @posts = Post.find_by(usr_id: event['source']['userId'])
+            message_content = create_message_array(@posts)
           else
-            REDIS.set(event['source']['userId'], event.message['text'])
-            message_content = event.message['text'] + 'だね！日付はいつ？'
+            if REDIS.get(event['source']['userId'])
+              convert_date = day_convert(event.message['text'])
+              if convert_date.nil?
+                message_content = 'いつかわからないよ。正しい日付を入力してね。'
+              else
+                @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
+                message_content = if @post.save
+                                    convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！'
+                                  else
+                                    'もう一度日付を入力してね！'
+                                  end
+              end
+            else
+              REDIS.set(event['source']['userId'], event.message['text'])
+              message_content = event.message['text'] + 'だね！日付はいつ？'
+            end
           end
           send_message(event['replyToken'], message_content)
         end
@@ -64,10 +69,21 @@ class LinebotController < ApplicationController
   end
 
   def send_message(token, value)
-    message = {
+    message = [{
       type: 'text',
       text: value
-    }
+    }]
     client.reply_message(token, message)
+  end
+
+  def create_message_array(posts)
+    message_array = []
+    posts.each do |message|
+      sample = {
+        type: 'text',
+        text: message
+      }
+      message_array.push(sample)
+    end
   end
 end
