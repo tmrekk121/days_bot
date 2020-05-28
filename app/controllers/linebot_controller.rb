@@ -85,6 +85,7 @@ class LinebotController < ApplicationController
       }
       message_array.push(sample)
     end
+    logger.debug(message_array)
     message_array
   end
 end
