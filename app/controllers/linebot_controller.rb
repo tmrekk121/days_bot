@@ -30,18 +30,18 @@ class LinebotController < ApplicationController
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
               if convert_date.nil?
-                message_content = 'いつかわからないよ。正しい日付を入力してね。'
+                message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
                 message_content = if @post.save
-                                    convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！'
+                                    create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                   else
-                                    'もう一度日付を入力してね！'
+                                    create_message('もう一度日付を入力してね！')
                                   end
               end
             else
               REDIS.set(event['source']['userId'], event.message['text'])
-              message_content = event.message['text'] + 'だね！日付はいつ？'
+              message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
             end
           end
           send_message(event['replyToken'], message_content)
@@ -68,13 +68,16 @@ class LinebotController < ApplicationController
     end
   end
 
-  def send_message(token, value)
-    # message = [{
-    #   type: 'text',
-    #   text: value
-    # }]
-    message = value 
+  def send_message(token, message)
     client.reply_message(token, message)
+  end
+
+  def create_message(message_content)
+    message = {
+      type: 'text',
+      text: message_content
+    }
+    message
   end
 
   def create_message_array(posts)
