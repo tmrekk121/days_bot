@@ -83,4 +83,5 @@ test:
 #
 production:
   <<: *default
+  database: DaysBot_production
   password: <%= ENV['DAYS_BOT_DATABASE_PASSWORD'] %>
