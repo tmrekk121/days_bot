@@ -28,7 +28,12 @@ class LinebotController < ApplicationController
             if convert_date.nil?
               message_content = 'いつかわからないよ。正しい日付を入力してね。'
             else
-              message_content = convert_date.strftime("%Y/%m/%d %H:%M:%S") + 'だね。登録完了！'
+              @post = Post.new(post_params)
+              message_content = if @post.save
+                                  convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！'
+                                else
+                                  'もう一度日付を入力してね！'
+                                end
             end
           else
             REDIS.set(event['source']['userId'], event.message['text'])
@@ -64,5 +69,9 @@ class LinebotController < ApplicationController
       text: value
     }
     client.reply_message(token, message)
+  end
+
+  def post_params
+    params.require(:post).permit(:user_id, :content, :start_date)
   end
 end

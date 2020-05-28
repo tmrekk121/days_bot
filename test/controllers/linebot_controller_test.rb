@@ -29,5 +29,9 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     expected = Date.yesterday.yesterday
     actual = linebot.send(:day_convert, '一昨日')
     assert_equal(expected, actual)
+
+    expected = nil
+    actual = linebot.send(:day_convert, 'いつか')
+    assert_equal(expected, actual)
   end
 end
