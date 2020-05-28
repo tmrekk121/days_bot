@@ -28,7 +28,7 @@ class LinebotController < ApplicationController
             if convert_date.nil?
               message_content = 'いつかわからないよ。正しい日付を入力してね。'
             else
-              @post = Post.new(post_params)
+              @post = Post.new(user_id: event['source']['userId'], content: event.message['text'], start_date: convert_date)
               message_content = if @post.save
                                   convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！'
                                 else
@@ -69,9 +69,5 @@ class LinebotController < ApplicationController
       text: value
     }
     client.reply_message(token, message)
-  end
-
-  def post_params
-    params.require(:post).permit(:user_id, :content, :start_date)
   end
 end
