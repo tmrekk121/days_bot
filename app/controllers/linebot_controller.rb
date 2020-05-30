@@ -92,16 +92,21 @@ class LinebotController < ApplicationController
   end
 
   def create_flex_message(message_array)
-    messages = [{
-      'type': 'carousel',
-      'contents': {
+    contents = []
+    message_array.each do |ma|
+      ct = {
         'type': 'bubble',
         'body': {
           'type': 'box',
           'layout': 'horizontal',
-          'contents': message_array
+          'contents': ma
         }
       }
+      contents.push(ct)
+    end
+    messages = [{
+      'type': 'carousel',
+      'contents': contents
     }]
     logger.debug(messages)
     messages
