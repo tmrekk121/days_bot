@@ -40,9 +40,7 @@ class LinebotController < ApplicationController
                                   end
               end
             else
-              # REDIS.set(event['source']['userId'], event.message['text'], options = { ex: 60 })
-              REDIS.set(event['source']['userId'], event.message['text'])
-              REDIS.expire(event['source']['userId'], 60)
+              REDIS.set(event['source']['userId'], event.message['text'], options = { ex: 60 })
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
             end
           end
