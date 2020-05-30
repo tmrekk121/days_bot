@@ -92,13 +92,13 @@ class LinebotController < ApplicationController
 
   def create_flex_message(message_array)
     messages = [{
-      type: 'carousel',
-      contents: {
-        type: 'bubble',
-        body: {
-          type: 'box',
-          layout: 'horizontal',
-          contents: message_array
+      'type': 'carousel',
+      'contents': {
+        'type': 'bubble',
+        'body': {
+          'type': 'box',
+          'layout': 'horizontal',
+          'contents': message_array
         }
       }
     }]
