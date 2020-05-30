@@ -82,10 +82,10 @@ class LinebotController < ApplicationController
   def create_message_array(posts)
     message_array = []
     posts.each do |post|
-      sample = {
+      sample = [{
         type: 'text',
         text: post.content
-      }
+      }]
       message_array.push(sample)
     end
     message_array
@@ -99,7 +99,7 @@ class LinebotController < ApplicationController
         'body': {
           'type': 'box',
           'layout': 'horizontal',
-          'contents': [ma]
+          'contents': ma
         }
       }
       contents.push(ct)
