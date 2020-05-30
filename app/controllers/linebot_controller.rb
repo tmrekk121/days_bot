@@ -16,7 +16,7 @@ class LinebotController < ApplicationController
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     head :bad_request unless client.validate_signature(body, signature)
-
+    ttl = 60
     events = client.parse_events_from(body)
     events.each do |event|
       case event
@@ -43,7 +43,7 @@ class LinebotController < ApplicationController
             else
               REDIS.multi do
                 REDIS.set(event['source']['userId'], event.message['text'])
-                REDIS.expire(event['source']['userID'], TTL)
+                REDIS.expire(event['source']['userID'], ttl)
               end
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
             end
