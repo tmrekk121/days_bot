@@ -109,6 +109,7 @@ class LinebotController < ApplicationController
         end
       end
     end
+    logger.debug(messages)
     messages
   end
 end
