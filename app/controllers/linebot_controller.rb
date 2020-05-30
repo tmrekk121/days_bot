@@ -91,7 +91,8 @@ class LinebotController < ApplicationController
   end
 
   def create_flex_message(posts)
-    messages = json.array! do
+    json = []
+    messages =
       json.type 'carousel'
       json.contents do
         json.type 'bubble'
@@ -106,7 +107,6 @@ class LinebotController < ApplicationController
           end
         end
       end
-    end
     messages
   end
 end
