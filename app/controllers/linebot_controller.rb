@@ -99,7 +99,7 @@ class LinebotController < ApplicationController
         'body': {
           'type': 'box',
           'layout': 'horizontal',
-          'contents': ma
+          'contents': [ma]
         }
       }
       contents.push(ct)
