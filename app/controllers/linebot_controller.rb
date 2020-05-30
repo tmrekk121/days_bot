@@ -34,6 +34,7 @@ class LinebotController < ApplicationController
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
+                # TODO: 保存に成功したらredisからdataを削除
                 message_content = if @post.save
                                     create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                   else

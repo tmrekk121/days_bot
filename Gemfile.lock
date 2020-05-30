@@ -73,6 +73,8 @@ GEM
     hiredis (0.6.3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
+    jbuilder (2.10.0)
+      activesupport (>= 5.0.0)
     line-bot-api (1.14.1)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -158,6 +160,7 @@ DEPENDENCIES
   byebug
   dotenv-rails
   hiredis
+  jbuilder (~> 2.7)
   line-bot-api
   listen (~> 3.2)
   pg (>= 0.18, < 2.0)
