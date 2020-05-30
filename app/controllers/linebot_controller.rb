@@ -26,9 +26,7 @@ class LinebotController < ApplicationController
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
             message_content = create_message_array(@posts)
-            if message_content.empty?
-              message_content = "何も登録されていないよ！"
-            end
+            message_content = '何も登録されていないよ！' if message_content.empty?
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
@@ -43,8 +41,10 @@ class LinebotController < ApplicationController
                                   end
               end
             else
-              # TODO: setした値に時間制限を持たせて削除
-              REDIS.set(event['source']['userId'], event.message['text'])
+              REDIS.multi do
+                REDIS.set(event['source']['userId'], event.message['text'])
+                REDIS.expire(event['source']['userID'], TTL)
+              end
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
             end
           end
