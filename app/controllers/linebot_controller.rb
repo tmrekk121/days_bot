@@ -104,12 +104,14 @@ class LinebotController < ApplicationController
       }
       contents.push(ct)
     end
-    logger.debug(contents)
     messages = [{
-      'type': 'carousel',
-      'contents': contents
+      "type": 'flex',
+      "altText": '*',
+      "contents": {
+        'type': 'carousel',
+        'contents': contents
+      }
     }]
-    logger.debug(messages.to_json)
     messages
   end
 end
