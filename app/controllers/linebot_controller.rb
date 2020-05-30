@@ -105,11 +105,11 @@ class LinebotController < ApplicationController
       contents.push(ct)
     end
     logger.debug(contents)
-    messages = {
+    messages = [{
       'type': 'carousel',
       'contents': contents
-    }
-    logger.debug(messages)
+    }]
+    logger.debug(messages.to_json)
     messages
   end
 end
