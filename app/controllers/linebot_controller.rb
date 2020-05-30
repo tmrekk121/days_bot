@@ -104,6 +104,7 @@ class LinebotController < ApplicationController
       }
       contents.push(ct)
     end
+    logger.debug(contents)
     messages = [{
       'type': 'carousel',
       'contents': contents
