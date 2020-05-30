@@ -91,22 +91,24 @@ class LinebotController < ApplicationController
   end
 
   def create_flex_message(posts)
-    json = []
-    messages =
-      json.type 'carousel'
-      json.contents do
-        json.type 'bubble'
-        json.body do
-          json.type 'box'
-          json.layout 'horizontal'
-          json.contents do
-            json.array! posts do |post|
-              json.type 'text'
-              json.text post.content
+    messages = Jbuilder.encode do |json|
+      json.array! do
+        json.type 'carousel'
+        json.contents do
+          json.type 'bubble'
+          json.body do
+            json.type 'box'
+            json.layout 'horizontal'
+            json.contents do
+              json.array! posts do |post|
+                json.type 'text'
+                json.text post.content
+              end
             end
           end
         end
       end
+    end
     messages
   end
 end
