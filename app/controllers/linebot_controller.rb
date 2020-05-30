@@ -24,8 +24,8 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
-            # message_content = create_message_array(@posts)
-            message_content = create_flex_message(@posts)
+            message_array = create_message_array(@posts)
+            message_content = create_flex_message(message_array)
             message_content = '何も登録されていないよ！' if message_content.empty?
           else
             if REDIS.get(event['source']['userId'])
@@ -90,25 +90,18 @@ class LinebotController < ApplicationController
     message_array
   end
 
-  def create_flex_message(posts)
-    messages = []
-    json_data = Jbuilder.encode do |json|
-      json.type 'carousel'
-      json.contents do
-        json.type 'bubble'
-        json.body do
-          json.type 'box'
-          json.layout 'horizontal'
-          json.contents do
-            json.array! posts do |post|
-              json.type 'text'
-              json.text post.content
-            end
-          end
-        end
-      end
-    end
-    messages.push(json_data)
+  def create_flex_message(message_array)
+    messages = [{
+      type: carousel,
+      contents: {
+        type: bubble,
+        body: {
+          type: box,
+          layout: horizontal,
+          contents: message_array
+        }
+      }
+    }]
     logger.debug(messages)
     messages
   end
