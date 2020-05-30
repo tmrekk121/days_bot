@@ -44,6 +44,7 @@ class LinebotController < ApplicationController
             else
               REDIS.set(event['source']['userId'], event.message['text'], options = { ex: 60 })
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
+              logger.debug(message_content)
             end
           end
           client.reply_message(event['replyToken'], message_content)
