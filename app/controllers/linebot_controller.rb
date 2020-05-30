@@ -26,6 +26,9 @@ class LinebotController < ApplicationController
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
             message_content = create_message_array(@posts)
+            if message_content.empty?
+              message_content = "何も登録されていないよ！"
+            end
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
@@ -40,11 +43,12 @@ class LinebotController < ApplicationController
                                   end
               end
             else
+              # TODO: setした値に時間制限を持たせて削除
               REDIS.set(event['source']['userId'], event.message['text'])
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
             end
           end
-          send_message(event['replyToken'], message_content)
+          client.reply_message(event['replyToken'], message_content)
         end
       end
     end
@@ -53,8 +57,8 @@ class LinebotController < ApplicationController
 
   private
 
-  def day_convert(message)
-    case message
+  def day_convert(original_message)
+    case original_message
     when '今日', 'きょう'
       Date.current
     when '明日', 'あした'
@@ -66,10 +70,6 @@ class LinebotController < ApplicationController
     when '一昨日', 'おととい'
       Date.yesterday.yesterday
     end
-  end
-
-  def send_message(token, message)
-    client.reply_message(token, message)
   end
 
   def create_message(message_content)
@@ -89,7 +89,6 @@ class LinebotController < ApplicationController
       }
       message_array.push(sample)
     end
-    logger.debug(message_array)
     message_array
   end
 end
