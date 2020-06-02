@@ -84,7 +84,7 @@ class LinebotController < ApplicationController
       Date.new(today.year, day_array[0], day_array[1])
     # example: 2020年01月21日
     when /20[0-9]{2}年[0-9]{1,2}月[0-9]{1,2}日/
-      day_array = original_message.match(/(20[0-9]{2})年[(0-9]{1,2})月([0-9]{1,2})日/)
+      day_array = original_message.match(/(20[0-9]{2})年([0-9]{1,2})月([0-9]{1,2})日/)
       Date.new(day_array[0], day_array[1], day_array[2])
     # example: 2020/01/21
     when /20[0-9]{2}\/[0-9]{1,2}\/[0-9]{1,2}/
