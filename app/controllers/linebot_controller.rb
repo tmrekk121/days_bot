@@ -128,6 +128,7 @@ class LinebotController < ApplicationController
     when /[0-9]{1,2,3}年後/
       day_array = original_message(/([0-9]{1,2,3})年後/)
       Date.next_year(day_array[0].to_i)
+    end
   end
 
 
