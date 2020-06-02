@@ -34,7 +34,6 @@ class LinebotController < ApplicationController
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
-                # TODO: 保存に成功したらredisからdataを削除
                 message_content = if @post.save
                                     REDIS.del(event['source']['userId'])
                                     create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
@@ -69,6 +68,23 @@ class LinebotController < ApplicationController
       Date.yesterday
     when '一昨日', 'おととい'
       Date.yesterday.yesterday
+    else
+      day_convert2(original_message)
+    end
+  end
+
+  def day_convert2(original_message)
+    # case original_message
+    # when 
+    # end
+  end
+
+  def delete_content(content, userid)
+    @post = Post.where(user_id: user_id, content: content)
+    if @post.destroy
+      message_content = ''
+    else
+      message_content = '削除に失敗しました。もう一度削除してください。'
     end
   end
 
@@ -107,11 +123,19 @@ class LinebotController < ApplicationController
     contents = []
     message_array.each do |ma|
       ct = {
-        'type': 'bubble',
-        'body': {
-          'type': 'box',
-          'layout': 'horizontal',
-          'contents': ma
+        type: 'bubble',
+        body: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: ma
+        },
+        footer: {
+          type: 'button',
+          action: {
+            type: 'postback',
+            label: '削除',
+            data: 'data ok'
+          }
         }
       }
       contents.push(ct)
