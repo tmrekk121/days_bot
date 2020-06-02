@@ -81,11 +81,24 @@ class LinebotController < ApplicationController
 
   def create_message_array(posts)
     message_array = []
+    today = Date.current
     posts.each do |post|
-      sample = [{
-        type: 'text',
-        text: post.content
-      }]
+      days = today - post.start_date
+      text = if days < 0
+               post.content + 'まであと' + -days + '日'
+             else
+               post.content + 'から' + days + '日'
+             end
+      sample = [
+        {
+          type: 'text',
+          text: post.content
+        },
+        {
+          type: 'text',
+          text: text
+        }
+      ]
       message_array.push(sample)
     end
     message_array
