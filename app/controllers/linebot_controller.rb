@@ -72,8 +72,7 @@ class LinebotController < ApplicationController
     when '一昨日', 'おととい'
       Date.yesterday.yesterday
     else
-      om = original_message
-      day_convert2(om)
+      day_convert2(original_message)
     end
   end
 
@@ -105,8 +104,7 @@ class LinebotController < ApplicationController
       day_array = original_message.match(/([0-9]{1,2})-([0-9]{1,2})/)
       Date.new(today.year, day_array[1].to_i, day_array[2].to_i)
     else
-      om = original_message
-      day_convert3(om)
+      day_convert3(original_message)
     end
   end
 
@@ -114,22 +112,22 @@ class LinebotController < ApplicationController
     today = Date.current
     case original_message
     when /[0-9]{1,3}日前/
-      day_array = original_message(/([0-9]{1,3})日前/)
+      day_array = original_message.match(/([0-9]{1,3})日前/)
       Date.prev_day(day_array[1].to_i)
     when /[0-9]{1,3}日後/
-      day_array = original_message(/([0-9]{1,3})日後/)
+      day_array = original_message.match(/([0-9]{1,3})日後/)
       Date.next_day(day_array[1].to_i)
     when /[0-9]{1,3}ヶ月前/
-      day_array = original_message(/([0-9]{1,3})ヶ月前/)
+      day_array = original_message.match(/([0-9]{1,3})ヶ月前/)
       Date.prev_month(day_array[1].to_i)
     when /[0-9]{1,3}ヶ月後/
-      day_array = original_message(/([0-9]{1,3})ヶ月後/)
+      day_array = original_message.match(/([0-9]{1,3})ヶ月後/)
       Date.next_month(day_array[1].to_i)
     when /[0-9]{1,3}年前/
-      day_array = original_message(/([0-9]{1,3})年前/)
+      day_array = original_message.match(/([0-9]{1,3})年前/)
       Date.prev_year(day_array[1].to_i)
     when /[0-9]{1,3}年後/
-      day_array = original_message(/([0-9]{1,3})年後/)
+      day_array = original_message.match(/([0-9]{1,3})年後/)
       Date.next_year(day_array[1].to_i)
     end
   end
