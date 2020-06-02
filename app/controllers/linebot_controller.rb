@@ -32,6 +32,7 @@ class LinebotController < ApplicationController
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
+              logger.debug(convert_date.to_s)
               if convert_date.nil?
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
