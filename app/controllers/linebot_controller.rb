@@ -37,6 +37,7 @@ class LinebotController < ApplicationController
                 # TODO: 保存に成功したらredisからdataを削除
                 message_content = if @post.save
                                     create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
+                                    REDIS.del(event['source']['userId'])
                                   else
                                     create_message('もう一度日付を入力してね！')
                                   end
@@ -84,7 +85,7 @@ class LinebotController < ApplicationController
     today = Date.current
     posts.each do |post|
       days = today - post.start_date
-      text = if days < 0
+      text = if days.negative?
                days = -days.to_i
                post.content + 'まであと' + days.to_s + '日'
              else
