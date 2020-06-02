@@ -82,27 +82,27 @@ class LinebotController < ApplicationController
     # example: 01月21日
     when /[0-9]{1,2}月[0-9]{1,2}日/
       day_array = original_message.match(/([0-9]{1,2})月([0-9]{1,2})/)
-      Date.new(today.year, day_array[0], day_array[1])
+      Date.new(today.year, day_array[0].to_i, day_array[1].to_i)
     # example: 2020年01月21日
     when /20[0-9]{2}年[0-9]{1,2}月[0-9]{1,2}日/
       day_array = original_message.match(/(20[0-9]{2})年([0-9]{1,2})月([0-9]{1,2})日/)
-      Date.new(day_array[0], day_array[1], day_array[2])
+      Date.new(day_array[0].to_i, day_array[1].to_i, day_array[2].to_i)
     # example: 2020/01/21
-    when /20[0-9]{2}\/[0-9]{1,2}\/[0-9]{1,2}/
-      day_array = original_message.match(/(20[0-9]{2})\/([0-9]{1,2})\/([0-9]{1,2})/)
-      Date.new(day_array[0], day_array[1], day_array[2])
+    when %r{20[0-9]{2}/[0-9]{1,2}/[0-9]{1,2}}
+      day_array = original_message.match(%r{(20[0-9]{2})/([0-9]{1,2})/([0-9]{1,2})})
+      Date.new(day_array[0].to_i, day_array[1].to_i, day_array[2].to_i)
     # example: 2020-01-21
     when /20[0-9]{2}-[0-9]{1,2}-[0-9]{1,2}/
       day_array = original_message.match(/(20[0-9]{2})-([0-9]{1,2})-([0-9]{1,2})/)
-      Date.new(day_array[0], day_array[1], day_array[2])
+      Date.new(day_array[0].to_i, day_array[1].to_i, day_array[2].to_i)
     # example: 01/21
-    when /[0-9]{1,2}\/[0-9]{1,2}/
-      day_array = original_message.match(/([0-9]{1,2})\/([0-9]{1,2})/)
-      Date.new(today.year, day_array[1], day_array[2])
+    when %r{[0-9]{1,2}/[0-9]{1,2}}
+      day_array = original_message.match(%r{([0-9]{1,2})/([0-9]{1,2})})
+      Date.new(today.year, day_array[1].to_i, day_array[2].to_i)
     #  example: 01-21
     when /[0-9]{1,2}-[0-9]{1,2}/
       day_array = original_message.match(/([0-9]{1,2})-([0-9]{1,2})/)
-      Date.new(today.year, day_array[1], day_array[2])
+      Date.new(today.year, day_array[1].to_i, day_array[2].to_i)
     else
       day_convert3(original_message)
     end
@@ -131,7 +131,6 @@ class LinebotController < ApplicationController
       Date.next_year(day_array[0].to_i)
     end
   end
-
 
   def delete_content(content, user_id)
     @post = Post.where(user_id: user_id, content: content)
