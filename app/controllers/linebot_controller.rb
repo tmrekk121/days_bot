@@ -36,8 +36,8 @@ class LinebotController < ApplicationController
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
                 # TODO: 保存に成功したらredisからdataを削除
                 message_content = if @post.save
-                                    create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                     REDIS.del(event['source']['userId'])
+                                    create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                   else
                                     create_message('もう一度日付を入力してね！')
                                   end
@@ -103,6 +103,7 @@ class LinebotController < ApplicationController
   end
 
   def create_flex_message(message_array)
+  # TODO:flex messageからcontentを削除できるようにする
     contents = []
     message_array.each do |ma|
       ct = {
