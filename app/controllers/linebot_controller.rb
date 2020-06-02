@@ -116,7 +116,7 @@ class LinebotController < ApplicationController
       today.prev_day(day_array[1].to_i)
     when /[0-9]{1,3}日後/
       day_array = original_message.match(/([0-9]{1,3})日後/)
-      today.next_day(day_array[1].to_i)
+      today.next_day(day_array[1].to_i) unless day_array[1] == '000'
     when /[0-9]{1,3}ヶ月前/
       day_array = original_message.match(/([0-9]{1,3})ヶ月前/)
       today.prev_month(day_array[1].to_i)
@@ -129,9 +129,6 @@ class LinebotController < ApplicationController
     when /[0-9]{1,3}年後/
       day_array = original_message.match(/([0-9]{1,3})年後/)
       today.next_year(day_array[1].to_i)
-    else
-      retrun nil
-    end
   end
 
   def delete_content(content, user_id)
