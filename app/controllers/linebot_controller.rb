@@ -72,12 +72,13 @@ class LinebotController < ApplicationController
     when '一昨日', 'おととい'
       Date.yesterday.yesterday
     else
-      day_convert2(original_message)
+      om = original_message
+      day_convert2(om)
     end
   end
 
   def day_convert2(original_message)
-    today = Date.today
+    today = Date.current
     case original_message
     # example: 01月21日
     when /[0-9]{1,2}月[0-9]{1,2}日/
@@ -104,12 +105,13 @@ class LinebotController < ApplicationController
       day_array = original_message.match(/([0-9]{1,2})-([0-9]{1,2})/)
       Date.new(today.year, day_array[1].to_i, day_array[2].to_i)
     else
-      day_convert3(original_message)
+      om = original_message
+      day_convert3(om)
     end
   end
 
   def day_convert3(original_message)
-    today = Date.today
+    today = Date.current
     case original_message
     when /[0-9]{1,3}日前/
       day_array = original_message(/([0-9]{1,3})日前/)
