@@ -85,15 +85,11 @@ class LinebotController < ApplicationController
     posts.each do |post|
       days = today - post.start_date
       text = if days < 0
-               post.content + 'まであと' + -days.to_s + '日'
+               post.content + 'まであと' + -days.to_i.to_s + '日'
              else
-               post.content + 'から' + days.to_s + '日'
+               post.content + 'から' + days.to_i.to_s + '日'
              end
       sample = [
-        {
-          type: 'text',
-          text: post.content
-        },
         {
           type: 'text',
           text: text
