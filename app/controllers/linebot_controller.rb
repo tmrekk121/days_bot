@@ -113,22 +113,22 @@ class LinebotController < ApplicationController
     case original_message
     when /[0-9]{1,3}日前/
       day_array = original_message.match(/([0-9]{1,3})日前/)
-      Date.prev_day(day_array[1].to_i)
+      today.prev_day(day_array[1].to_i)
     when /[0-9]{1,3}日後/
       day_array = original_message.match(/([0-9]{1,3})日後/)
-      Date.next_day(day_array[1].to_i)
+      today.next_day(day_array[1].to_i)
     when /[0-9]{1,3}ヶ月前/
       day_array = original_message.match(/([0-9]{1,3})ヶ月前/)
-      Date.prev_month(day_array[1].to_i)
+      today.prev_month(day_array[1].to_i)
     when /[0-9]{1,3}ヶ月後/
       day_array = original_message.match(/([0-9]{1,3})ヶ月後/)
-      Date.next_month(day_array[1].to_i)
+      today.next_month(day_array[1].to_i)
     when /[0-9]{1,3}年前/
       day_array = original_message.match(/([0-9]{1,3})年前/)
-      Date.prev_year(day_array[1].to_i)
+      today.prev_year(day_array[1].to_i)
     when /[0-9]{1,3}年後/
       day_array = original_message.match(/([0-9]{1,3})年後/)
-      Date.next_year(day_array[1].to_i)
+      today.next_year(day_array[1].to_i)
     end
   end
 
