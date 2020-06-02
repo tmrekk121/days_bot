@@ -75,17 +75,17 @@ class LinebotController < ApplicationController
 
   def day_convert2(original_message)
     # case original_message
-    # when 
+    # when
     # end
   end
 
-  def delete_content(content, userid)
+  def delete_content(content, user_id)
     @post = Post.where(user_id: user_id, content: content)
-    if @post.destroy
-      message_content = ''
-    else
-      message_content = '削除に失敗しました。もう一度削除してください。'
-    end
+    message_content = if @post.destroy
+                        ''
+                      else
+                        '削除に失敗しました。もう一度削除してください。'
+                      end
   end
 
   def create_message(message_content)
@@ -119,7 +119,7 @@ class LinebotController < ApplicationController
   end
 
   def create_flex_message(message_array)
-  # TODO:flex messageからcontentを削除できるようにする
+    # TODO: flex messageからcontentを削除できるようにする
     contents = []
     message_array.each do |ma|
       ct = {
@@ -130,12 +130,16 @@ class LinebotController < ApplicationController
           contents: ma
         },
         footer: {
-          type: 'button',
-          action: {
-            type: 'postback',
-            label: '削除',
-            data: 'data ok'
-          }
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            type: 'button',
+            action: {
+              type: 'postback',
+              label: '削除',
+              data: 'data ok'
+            }
+          ]
         }
       }
       contents.push(ct)
