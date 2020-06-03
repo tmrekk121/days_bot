@@ -23,7 +23,7 @@ class LinebotController < ApplicationController
         data = event['postback']['data'].split('content:')
         content = data[2]
         user_id = event['source']['userId']
-        logger.debug(data[1]])
+        logger.debug(data[1])
         logger.debug(data[1].class)
         start_date = Date.parse(data[1])
         message_content = delete_content(user_id, content, start_date)
