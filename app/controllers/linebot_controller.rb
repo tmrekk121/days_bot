@@ -26,12 +26,12 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
-            if @posts.empty?
-              message_array = create_message_array(@posts)
-              message_content = create_flex_message(message_array)
-            else
-              message_content = '何も登録されていないよ！'
-            end
+            message_array = create_message_array(@posts)
+            message_content = if message_array.empty?
+                                create_flex_message(message_array)
+                              else
+                                '何も登録されていないよ！'
+                              end
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
