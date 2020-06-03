@@ -20,12 +20,11 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        content = event['postback']['data']
+        content = event['postback']['data'][0]
         user_id = event['source']['userId']
-        start_date = event['postback']['data']
-        logger.debug(event['postback']['data'])
-        # message_content = delete_content(user_id, content, start_date)
-        # client.reply_message(event['replyToken'], create_message(message_content))
+        start_date = event['postback']['data'][1]
+        message_content = delete_content(user_id, content, start_date)
+        client.reply_message(event['replyToken'], create_message(message_content))
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
@@ -35,10 +34,8 @@ class LinebotController < ApplicationController
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
-                                logger.debug(message_array)
                                 create_flex_message(message_array, message_array2, message_array3)
                               end
-            logger.debug(message_content)
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
