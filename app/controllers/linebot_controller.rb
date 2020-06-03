@@ -43,7 +43,6 @@ class LinebotController < ApplicationController
               if convert_date.nil?
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
-                # TODO: user_idとcontentと日付が同じものを保存しない
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
                 message_content = if @post.save
                                     REDIS.del(event['source']['userId'])
