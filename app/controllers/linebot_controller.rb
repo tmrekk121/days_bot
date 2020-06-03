@@ -22,7 +22,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Postback
         content = event['postback']['data'][0]
         user_id = event['source']['userId']
-        start_date = event['postback']['data'][1]
+        start_date = Date.parse(event['postback']['data'][1])
         message_content = delete_content(user_id, content, start_date)
         client.reply_message(event['replyToken'], create_message(message_content))
       when Line::Bot::Event::Message
@@ -139,6 +139,7 @@ class LinebotController < ApplicationController
 
   def delete_content(user_id, content, start_date)
     @post = Post.where(user_id: user_id, content: content, start_date: start_date)
+    logger.debug()
     message_content = if @post[0].destroy
                         '削除しました。'
                       else
@@ -175,7 +176,7 @@ class LinebotController < ApplicationController
         }
       ]
       message_array3.push(post.start_date)
-      message_array2.push(post.content)
+      message_array2.push(post.content.to_s)
       message_array.push(sample)
     end
     [message_array, message_array2, message_array3]
