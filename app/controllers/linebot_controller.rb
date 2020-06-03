@@ -28,6 +28,7 @@ class LinebotController < ApplicationController
             @posts = Post.where(user_id: event['source']['userId'])
             message_array = create_message_array(@posts)
             message_content = create_flex_message(message_array)
+            logger.debug(message_content)
             message_content = '何も登録されていないよ！' if message_content.empty?
           else
             if REDIS.get(event['source']['userId'])
