@@ -22,7 +22,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Postback
         content = event['postback']['data'][0]
         user_id = event['source']['userId']
-        
+        logger.debug(event['postback']['data'][1])
         start_date = Date.parse(event['postback']['data'][1])
         message_content = delete_content(user_id, content, start_date)
         client.reply_message(event['replyToken'], create_message(message_content))
