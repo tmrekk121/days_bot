@@ -21,11 +21,11 @@ class LinebotController < ApplicationController
       case event
       when Line::Bot::Event::Postback
         data = event['postback']['data'].split('content:')
-        content = data[2]
+        content = data[1]
         user_id = event['source']['userId']
-        logger.debug(data[1])
-        logger.debug(data[1].class)
-        start_date = Date.parse(data[1])
+        logger.debug(data[2])
+        logger.debug(data[2].class)
+        start_date = Date.parse(data[2])
         message_content = delete_content(user_id, content, start_date)
         client.reply_message(event['replyToken'], create_message(message_content))
       when Line::Bot::Event::Message
