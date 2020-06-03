@@ -35,8 +35,10 @@ class LinebotController < ApplicationController
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
+                                logger.debug(message_array)
                                 create_flex_message(message_array, message_array2, message_array3)
                               end
+            logger.debug(message_content)
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
