@@ -20,14 +20,14 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        logger.debug(event['source'])
+        logger.debug(event)
+        logger.debug(event['source']['userId'])
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
             message_array = create_message_array(@posts)
-            logger.debug(message_array.empty?)
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
@@ -36,7 +36,6 @@ class LinebotController < ApplicationController
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
-              logger.debug(convert_date.to_s)
               if convert_date.nil?
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
@@ -51,7 +50,6 @@ class LinebotController < ApplicationController
             else
               REDIS.set(event['source']['userId'], event.message['text'], options = { ex: 60 })
               message_content = create_message(event.message['text'] + 'だね！日付はいつ？')
-              logger.debug(message_content)
             end
           end
           client.reply_message(event['replyToken'], message_content)
