@@ -20,20 +20,22 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        content = event['postback']['data']
+        content = event['postback']['data'][0]
         user_id = event['source']['userId']
-        message_content = delete_content(user_id, content)
+        start_date = event['postback']['data'][1]
+        logger.debug(event['postback']['data'])
+        message_content = delete_content(user_id, content, start_date)
         client.reply_message(event['replyToken'], create_message(message_content))
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
-            message_array, message_array2 = create_message_array(@posts)
+            message_array, message_array2, message_array3 = create_message_array(@posts)
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
-                                create_flex_message(message_array, message_array2)
+                                create_flex_message(message_array, message_array2, message_array3)
                               end
           else
             if REDIS.get(event['source']['userId'])
@@ -137,8 +139,8 @@ class LinebotController < ApplicationController
     end
   end
 
-  def delete_content(user_id, content)
-    @post = Post.where(user_id: user_id, content: content)
+  def delete_content(user_id, content, start_date)
+    @post = Post.where(user_id: user_id, content: content, start_date: start_date)
     message_content = if @post[0].destroy
                         '削除しました。'
                       else
@@ -158,6 +160,7 @@ class LinebotController < ApplicationController
   def create_message_array(posts)
     message_array = []
     message_array2 = []
+    message_array3 = []
     today = Date.current
     posts.each do |post|
       days = today - post.start_date
@@ -173,15 +176,16 @@ class LinebotController < ApplicationController
           text: text
         }
       ]
+      message_array3.push(post.start_date)
       message_array2.push(post.content)
       message_array.push(sample)
     end
-    [message_array, message_array2]
+    [message_array, message_array2, message_array3]
   end
 
-  def create_flex_message(message_array, message_array2)
+  def create_flex_message(message_array, message_array2, message_array3)
     contents = []
-    message_array.zip(message_array2) do |ma, ma2|
+    message_array.zip(message_array2, message_array3) do |ma, ma2, ma3|
       ct = {
         type: 'bubble',
         body: {
@@ -197,7 +201,7 @@ class LinebotController < ApplicationController
             action: {
               type: 'postback',
               label: '削除',
-              data: ma2
+              data: [ma2, ma3]
             }
           ]
         }
