@@ -172,7 +172,7 @@ class LinebotController < ApplicationController
           text: text
         }
       ]
-      message_array2.push(sample2)
+      message_array2.push(post.content)
       message_array.push(sample)
     end
     return message_array, message_array2
