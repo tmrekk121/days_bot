@@ -20,7 +20,7 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        conent = event['postback']['data']
+        content = event['postback']['data']
         user_id = event['source']['userId']
         message_content = delete_content(content, user_id)
         logger.debug(event['postback']['data'])
