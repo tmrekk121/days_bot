@@ -139,7 +139,7 @@ class LinebotController < ApplicationController
 
   def delete_content(user_id, content)
     @post = Post.where(user_id: user_id, content: content)
-    message_content = if @post.destroy
+    message_content = if @post[0].destroy
                         '削除しました。'
                       else
                         '削除に失敗しました。もう一度削除してください。'
