@@ -20,18 +20,21 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        logger.debug(event['postback'])
-        logger.debug(event['source']['userId'])
+        conent = event['postback']['data']
+        user_id = event['source']['userId']
+        message_content = delete_content(content, user_id)
+        logger.debug(event['postback']['data'])
+        client.reply_message(event['replyToken'], message_content)
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
-            message_array = create_message_array(@posts)
+            message_array, message_array2 = create_message_array(@posts)
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
-                                create_flex_message(message_array)
+                                create_flex_message(message_array, message_array2)
                               end
           else
             if REDIS.get(event['source']['userId'])
@@ -153,6 +156,7 @@ class LinebotController < ApplicationController
 
   def create_message_array(posts)
     message_array = []
+    message_array2 = []
     today = Date.current
     posts.each do |post|
       days = today - post.start_date
@@ -168,15 +172,15 @@ class LinebotController < ApplicationController
           text: text
         }
       ]
+      message_array2.push(sample2)
       message_array.push(sample)
     end
-    message_array
+    return message_array, message_array2
   end
 
-  def create_flex_message(message_array)
-    # TODO: flex messageからcontentを削除できるようにする
+  def create_flex_message(message_array, message_array2)
     contents = []
-    message_array.each do |ma|
+    message_array.zip(message_array2) do |ma, ma2|
       ct = {
         type: 'bubble',
         body: {
@@ -192,7 +196,7 @@ class LinebotController < ApplicationController
             action: {
               type: 'postback',
               label: '削除',
-              data: 'data ok'
+              data: ma2
             }
           ]
         }
