@@ -24,7 +24,7 @@ class LinebotController < ApplicationController
         user_id = event['source']['userId']
         message_content = delete_content(user_id, content)
         logger.debug(event['postback']['data'])
-        client.reply_message(event['replyToken'], message_content)
+        client.reply_message(event['replyToken'],create_message(message_content))
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
