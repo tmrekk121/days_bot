@@ -22,7 +22,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Postback
         content = event['postback']['data'][0]
         user_id = event['source']['userId']
-        logger.debug(event['postback']['data'][1])
+        logger.debug(event['postback']['data'])
         start_date = Date.parse(event['postback']['data'][1])
         message_content = delete_content(user_id, content, start_date)
         client.reply_message(event['replyToken'], create_message(message_content))
@@ -201,7 +201,7 @@ class LinebotController < ApplicationController
             action: {
               type: 'postback',
               label: '削除',
-              data: [ma2, ma3].to_s
+              data: 'content:' + ma2 + ', start_date:' + ma3
             }
           ]
         }
