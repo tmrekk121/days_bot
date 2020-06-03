@@ -111,24 +111,24 @@ class LinebotController < ApplicationController
   def day_convert3(original_message)
     today = Date.current
     case original_message
-    when /^\d[0-9]{1,3}$日前/
+    when /^[0-9]{1,3}日前$/
       day_array = original_message.match(/([0-9]{1,3})日前/)
-      today.prev_day(day_array[1].to_i) unless day_array[1] == '000'
-    when /^\d[0-9]{1,3}$日後/
+      today.prev_day(day_array[1].to_i)
+    when /^[0-9]{1,3}日後$/
       day_array = original_message.match(/([0-9]{1,3})日後/)
-      today.next_day(day_array[1].to_i) unless day_array[1] == '000'
-    when /^\d[0-9]{1,3}$ヶ月前/
+      today.next_day(day_array[1].to_i)
+    when /^[0-9]{1,3}ヶ月前$/
       day_array = original_message.match(/([0-9]{1,3})ヶ月前/)
-      today.prev_month(day_array[1].to_i) unless day_array[1] == '000'
-    when /^\d[0-9]{1,3}$ヶ月後/
+      today.prev_month(day_array[1].to_i)
+    when /^[0-9]{1,3}ヶ月後$/
       day_array = original_message.match(/([0-9]{1,3})ヶ月後/)
-      today.next_month(day_array[1].to_i) unless day_array[1] == '000'
-    when /^\d[0-9]{1,3}$年前/
+      today.next_month(day_array[1].to_i)
+    when /^[0-9]{1,3}年前$/
       day_array = original_message.match(/([0-9]{1,3})年前/)
-      today.prev_year(day_array[1].to_i) unless day_array[1] == '000'
-    when /^\d[0-9]{1,3}$年後/
+      today.prev_year(day_array[1].to_i)
+    when /^[0-9]{1,3}年後$/
       day_array = original_message.match(/([0-9]{1,3})年後/)
-      today.next_year(day_array[1].to_i) unless day_array[1] == '000'
+      today.next_year(day_array[1].to_i)
     end
   end
 

@@ -129,4 +129,88 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     actual = @linebot.send(:day_convert, '21-')
     assert_nil(actual)
   end
+
+  test '0日前 0日後' do
+    today = Date.current
+    expected = today.prev_day(0)
+    actual = @linebot.send(:day_convert, '0日前')
+    assert_equal(expected, actual)
+
+    expected = today.prev_day(0)
+    actual = @linebot.send(:day_convert, '00日前')
+    assert_equal(expected, actual)
+
+    expected = today.prev_day(0)
+    actual = @linebot.send(:day_convert, '000日前')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '0000日前')
+    assert_nil(actual)
+
+    expected = today.next_day(0)
+    actual = @linebot.send(:day_convert, '0日後')
+    assert_equal(expected, actual)
+
+    expected = today.next_day(0)
+    actual = @linebot.send(:day_convert, '00日後')
+    assert_equal(expected, actual)
+
+    expected = today.next_day(0)
+    actual = @linebot.send(:day_convert, '000日後')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '0000日後')
+    assert_nil(actual)
+  end
+
+  test '1日前 1日後' do
+    today = Date.current
+    expected = today.prev_day(1)
+    actual = @linebot.send(:day_convert, '1日前')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '01日前')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '001日前')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '0001日前')
+    assert_nil(actual)
+
+    expected = today.next_day(1)
+    actual = @linebot.send(:day_convert, '1日後')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '01日後')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '001日後')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '0001日後')
+    assert_nil(actual)
+  end
+
+  test '1ヶ月前 1ヶ月後' do
+    today = Date.current
+    expected = today.prev_month(1)
+    actual = @linebot.send(:day_convert, '1ヶ月前')
+    assert_equal(expected, actual)
+
+    expected = today.next_month(1)
+    actual = @linebot.send(:day_convert, '1ヶ月後')
+    assert_equal(expected, actual)
+  end
+
+  test '1年前 1年後' do
+    today = Date.current
+    expected = today.prev_year(1)
+    actual = @linebot.send(:day_convert, '1年前')
+    assert_equal(expected, actual)
+
+    expected = today.next_year(1)
+    actual = @linebot.send(:day_convert, '1年後')
+    assert_equal(expected, actual)
+  end
 end
