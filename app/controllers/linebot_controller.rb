@@ -27,9 +27,9 @@ class LinebotController < ApplicationController
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
             message_array = create_message_array(@posts)
-            logger.debug(message_array)
+            logger.debug(message_array.empty?)
             message_content = if message_array.empty?
-                                '何も登録されていないよ！'
+                                create_message('何も登録されていないよ！')
                               else
                                 create_flex_message(message_array)
                               end
