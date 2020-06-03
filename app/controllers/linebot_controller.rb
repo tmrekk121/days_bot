@@ -49,7 +49,7 @@ class LinebotController < ApplicationController
                                     REDIS.del(event['source']['userId'])
                                     create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                   else
-                                    create_message('もう一度日付を入力してね！')
+                                    create_message('すでにデータが登録されているか、正しい形式の日付じゃありません。もう一度日付を入力してね！')
                                   end
               end
             else
