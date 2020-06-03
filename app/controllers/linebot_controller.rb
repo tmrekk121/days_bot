@@ -22,7 +22,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Postback
         content = event['postback']['data']
         user_id = event['source']['userId']
-        message_content = delete_content(content, user_id)
+        message_content = delete_content(user_id, content)
         logger.debug(event['postback']['data'])
         client.reply_message(event['replyToken'], message_content)
       when Line::Bot::Event::Message
@@ -137,13 +137,14 @@ class LinebotController < ApplicationController
     end
   end
 
-  def delete_content(content, user_id)
+  def delete_content(user_id, content)
     @post = Post.where(user_id: user_id, content: content)
     message_content = if @post.destroy
-                        ''
+                        '削除しました。'
                       else
                         '削除に失敗しました。もう一度削除してください。'
                       end
+    message_content
   end
 
   def create_message(message_content)
