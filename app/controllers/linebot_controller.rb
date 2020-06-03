@@ -20,7 +20,7 @@ class LinebotController < ApplicationController
     events.each do |event|
       case event
       when Line::Bot::Event::Postback
-        logger.debug(event)
+        logger.debug(event['postback'])
         logger.debug(event['source']['userId'])
       when Line::Bot::Event::Message
         case event.type
