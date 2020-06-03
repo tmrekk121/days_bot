@@ -23,8 +23,7 @@ class LinebotController < ApplicationController
         content = event['postback']['data']
         user_id = event['source']['userId']
         message_content = delete_content(user_id, content)
-        logger.debug(event['postback']['data'])
-        client.reply_message(event['replyToken'],create_message(message_content))
+        client.reply_message(event['replyToken'], create_message(message_content))
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
@@ -42,6 +41,7 @@ class LinebotController < ApplicationController
               if convert_date.nil?
                 message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
               else
+                # TODO: user_idとcontentと日付が同じものを保存しない
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
                 message_content = if @post.save
                                     REDIS.del(event['source']['userId'])
@@ -176,7 +176,7 @@ class LinebotController < ApplicationController
       message_array2.push(post.content)
       message_array.push(sample)
     end
-    return message_array, message_array2
+    [message_array, message_array2]
   end
 
   def create_flex_message(message_array, message_array2)
