@@ -189,7 +189,7 @@ class LinebotController < ApplicationController
     message_array.zip(message_array2, message_array3) do |ma, ma2, ma3|
       ct = {
         type: 'bubble',
-        size: 'kilo',
+        size: 'micro',
         body: {
           type: 'box',
           layout: 'horizontal',
