@@ -210,7 +210,7 @@ class LinebotController < ApplicationController
         size: 'micro',
         body: {
           type: 'box',
-          layout: 'vartical',
+          layout: 'vertical',
           contents: ma,
           backgroundColor: '#0D8186'
         },
