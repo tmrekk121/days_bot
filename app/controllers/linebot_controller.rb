@@ -224,7 +224,8 @@ class LinebotController < ApplicationController
               label: '削除',
               data: 'content::' + ma2 + 'content::' + ma3
             }
-          ]
+          ],
+          height: '15%'
         }
       }
       contents.push(ct)
