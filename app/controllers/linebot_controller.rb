@@ -193,6 +193,13 @@ class LinebotController < ApplicationController
           size: 'lg',
           color: '#ffffff',
           align: 'center'
+        },
+        {
+          type: 'text',
+          text: post.start_date.to_s,
+          size: 'xs',
+          color: '#dcdcdc',
+          align: 'start'
         }
       ]
       message_array3.push(post.start_date.to_s)
