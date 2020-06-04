@@ -173,8 +173,8 @@ class LinebotController < ApplicationController
         {
           type: 'text',
           text: text,
-          size: lg,
-          weight: bold
+          size: 'lg',
+          weight: 'bold'
         }
       ]
       message_array3.push(post.start_date.to_s)
