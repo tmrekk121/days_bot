@@ -163,18 +163,35 @@ class LinebotController < ApplicationController
     today = Date.current
     posts.each do |post|
       days = today - post.start_date
-      text = if days.negative?
-               days = -days.to_i
-               post.content + 'まであと' + days.to_s + '日'
-             else
-               post.content + 'から' + days.to_i.to_s + '日'
-             end
+      content = post.content
+      util_date = days.to_s
+      if days.negative?
+        days = -days.to_i
+        util_or_since = 'あと何日'
+      else
+        util_or_since = 'あれから何日'
+      end
       sample = [
         {
           type: 'text',
-          text: text,
+          text: util_or_since,
+          size: 'sm',
+          color: '#8C8C8C',
+          align: 'center'
+        },
+        {
+          type: 'text',
+          text: content,
           size: 'lg',
-          weight: 'bold'
+          color: '#ffffff',
+          align: 'center'
+        },
+        {
+          type: 'text',
+          text: util_date,
+          size: 'lg',
+          color: '#ffffff',
+          align: 'center'
         }
       ]
       message_array3.push(post.start_date.to_s)
@@ -193,7 +210,8 @@ class LinebotController < ApplicationController
         body: {
           type: 'box',
           layout: 'horizontal',
-          contents: ma
+          contents: ma,
+          backgroundColor: '#0D8186'
         },
         footer: {
           type: 'box',
