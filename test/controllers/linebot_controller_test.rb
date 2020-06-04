@@ -7,7 +7,7 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     @linebot = LinebotController.new
   end
 
-  test 'day_convertのテスト' do
+  test '今日 きょう 明日 あした 明後日　昨日 一昨日 いつか' do
     expected = Date.current
     actual_kanji = @linebot.send(:day_convert, '今日')
     actual_hiragana = @linebot.send(:day_convert, 'きょう')
@@ -82,7 +82,7 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     assert_nil(actual)
   end
 
-  test '2020/01/21 01/21' do
+  test '2020/01/21 1020/01/21 12000/01/21 01/21 2000/21 /21 21/' do
     expected = Date.new(2020, 1, 21)
     actual = @linebot.send(:day_convert, '2020/01/21')
     assert_equal(expected, actual)
@@ -106,7 +106,7 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     assert_nil(actual)
   end
 
-  test '2020-01-21 01-21' do
+  test '2020-01-21 1020-01-21 12000-01-21 01-21 2000-21 -21 21-' do
     expected = Date.new(2020, 1, 21)
     actual = @linebot.send(:day_convert, '2020-01-21')
     assert_equal(expected, actual)
@@ -130,7 +130,7 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     assert_nil(actual)
   end
 
-  test '0日前 0日後' do
+  test '0日前 00日前 000日前 000日前 0日後 00日後 000日後 0000日後' do
     today = Date.current
     expected = today.prev_day(0)
     actual = @linebot.send(:day_convert, '0日前')
@@ -163,7 +163,7 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     assert_nil(actual)
   end
 
-  test '1日前 1日後' do
+  test '1日前 01日前 001日前 0001日前 1日後 01日後 001日後 0001日後' do
     today = Date.current
     expected = today.prev_day(1)
     actual = @linebot.send(:day_convert, '1日前')
