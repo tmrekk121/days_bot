@@ -213,4 +213,25 @@ class LinebotControllerTest < ActionDispatch::IntegrationTest
     actual = @linebot.send(:day_convert, '1年後')
     assert_equal(expected, actual)
   end
+
+  test '1999年01月21日 1999/01/21 1999-01-21' do
+    expected = Date.new(1999, 1, 21)
+    actual = @linebot.send(:day_convert, '1999年01月21日')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '1999/01/21')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '1999-01-21')
+    assert_equal(expected, actual)
+  end
+
+  test '1900/01/21 1899/01/21' do
+    expected = Date.new(1900, 1, 21)
+    actual = @linebot.send(:day_convert, '1900/01/21')
+    assert_equal(expected, actual)
+
+    actual = @linebot.send(:day_convert, '1899/01/21')
+    assert_nil(actual)
+  end
 end

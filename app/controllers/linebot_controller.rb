@@ -90,16 +90,16 @@ class LinebotController < ApplicationController
       day_array = original_message.match(/([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日/)
       Date.new(today.year, day_array[1].to_i, day_array[2].to_i)
     # example: 2020年01月21日
-    when /^20[0-9]{2}年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/
-      day_array = original_message.match(/(20[0-9]{2})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日/)
+    when /^(19[0-9]{2}|20[0-9]{2})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/
+      day_array = original_message.match(/(19[0-9]{2}|20[0-9]{2})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日/)
       Date.new(day_array[1].to_i, day_array[2].to_i, day_array[3].to_i)
     # example: 2020/01/21
-    when %r{^20[0-9]{2}/([1-9]|0[1-9]|1[0-2])/([1-9]|0[1-9]|[12][0-9]|3[01])$}
-      day_array = original_message.match(%r{(20[0-9]{2})/([0-9]{1,2})/([0-9]{1,2})})
+    when %r{^(19[0-9]{2}|20[0-9]{2})/([1-9]|0[1-9]|1[0-2])/([1-9]|0[1-9]|[12][0-9]|3[01])$}
+      day_array = original_message.match(%r{(19[0-9]{2}|20[0-9]{2})/([0-9]{1,2})/([0-9]{1,2})})
       Date.new(day_array[1].to_i, day_array[2].to_i, day_array[3].to_i)
     # example: 2020-01-21
-    when /^20[0-9]{2}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[12][0-9]|3[01])$/
-      day_array = original_message.match(/(20[0-9]{2})-([0-9]{1,2})-([0-9]{1,2})/)
+    when /^(19[0-9]{2}|20[0-9]{2})-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[12][0-9]|3[01])$/
+      day_array = original_message.match(/(19[0-9]{2}|20[0-9]{2})-([0-9]{1,2})-([0-9]{1,2})/)
       Date.new(day_array[1].to_i, day_array[2].to_i, day_array[3].to_i)
     # example: 01/21
     when %r{^([1-9]|0[1-9]|1[0-2])/([1-9]|0[1-9]|[12][0-9]|3[01])$}
@@ -184,6 +184,7 @@ class LinebotController < ApplicationController
           type: 'text',
           text: content,
           size: 'lg',
+          weight: 'bold',
           color: '#ffffff',
           align: 'center'
         },
@@ -199,7 +200,7 @@ class LinebotController < ApplicationController
           text: post.start_date.to_s,
           size: 'xs',
           color: '#dcdcdc',
-          align: 'start'
+          align: 'center'
         }
       ]
       message_array3.push(post.start_date.to_s)
