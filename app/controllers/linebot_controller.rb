@@ -172,7 +172,9 @@ class LinebotController < ApplicationController
       sample = [
         {
           type: 'text',
-          text: text
+          text: text,
+          size: lg,
+          weight: bold
         }
       ]
       message_array3.push(post.start_date.to_s)
@@ -187,6 +189,7 @@ class LinebotController < ApplicationController
     message_array.zip(message_array2, message_array3) do |ma, ma2, ma3|
       ct = {
         type: 'bubble',
+        size: 'kilo',
         body: {
           type: 'box',
           layout: 'horizontal',
