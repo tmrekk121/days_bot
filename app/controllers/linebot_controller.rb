@@ -176,9 +176,9 @@ class LinebotController < ApplicationController
         {
           type: 'text',
           text: util_or_since,
-          size: 'sm',
-          color: '#f8f8ff',
-          align: 'center'
+          size: 'xs',
+          color: '#dcdcdc',
+          align: 'start'
         },
         {
           type: 'text',
@@ -212,7 +212,7 @@ class LinebotController < ApplicationController
           type: 'box',
           layout: 'vertical',
           contents: ma,
-          backgroundColor: '#0D8186'
+          backgroundColor: '#7f7fff'
         },
         footer: {
           type: 'box',
