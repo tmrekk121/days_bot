@@ -164,19 +164,20 @@ class LinebotController < ApplicationController
     posts.each do |post|
       days = today - post.start_date
       content = post.content
-      util_date = days.to_s
       if days.negative?
         days = -days.to_i
         util_or_since = 'あと何日'
+        util_date = days.to_s
       else
         util_or_since = 'あれから何日'
+        util_date = days.to_i.to_s
       end
       sample = [
         {
           type: 'text',
           text: util_or_since,
           size: 'sm',
-          color: '#8C8C8C',
+          color: '#f8f8ff',
           align: 'center'
         },
         {
@@ -209,7 +210,7 @@ class LinebotController < ApplicationController
         size: 'micro',
         body: {
           type: 'box',
-          layout: 'horizontal',
+          layout: 'vartical',
           contents: ma,
           backgroundColor: '#0D8186'
         },
