@@ -225,7 +225,7 @@ class LinebotController < ApplicationController
               data: 'content::' + ma2 + 'content::' + ma3
             }
           ],
-          height: '20px'
+          height: '35px'
         }
       }
       contents.push(ct)
