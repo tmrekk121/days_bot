@@ -31,24 +31,24 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           if event.message['text'] == '一覧' || event.message['text'] == 'いちらん'
             @posts = Post.where(user_id: event['source']['userId'])
-            message_array, message_array2, message_array3 = create_message_array(@posts)
+            message_array, content_array, start_date_array = create_array(@posts)
             message_content = if message_array.empty?
                                 create_message('何も登録されていないよ！')
                               else
-                                create_flex_message(message_array, message_array2, message_array3)
+                                create_flex_message(message_array, content_array, start_date_array)
                               end
           else
             if REDIS.get(event['source']['userId'])
               convert_date = day_convert(event.message['text'])
               if convert_date.nil?
-                message_content = create_message('いつかわからないよ。正しい日付を入力してね。')
+                message_content = create_message('いつかわからないよ！正しい日付を入力してね！')
               else
                 @post = Post.new(user_id: event['source']['userId'], content: REDIS.get(event['source']['userId']), start_date: convert_date)
                 message_content = if @post.save
                                     REDIS.del(event['source']['userId'])
                                     create_message(convert_date.strftime('%Y/%m/%d') + 'だね。登録完了！')
                                   else
-                                    create_message('すでにデータが登録されているか、正しい形式の日付じゃありません。もう一度日付を入力してね！')
+                                    create_message('すでにデータが登録されているか、正しい形式の日付じゃないよ！。もう一度日付を入力してね！')
                                   end
               end
             else
@@ -156,23 +156,23 @@ class LinebotController < ApplicationController
     message
   end
 
-  def create_message_array(posts)
+  def create_array(posts)
     message_array = []
-    message_array2 = []
-    message_array3 = []
+    content_array = []
+    start_date_array = []
     today = Date.current
     posts.each do |post|
       days = today - post.start_date
       content = post.content
       if days.negative?
-        days = -days.to_i
+        days_int = -days.to_i
+        util_date = days_int.to_s
         util_or_since = 'あと何日'
-        util_date = days.to_s
       else
-        util_or_since = 'あれから何日'
         util_date = days.to_i.to_s
+        util_or_since = 'あれから何日'
       end
-      sample = [
+      message_content = [
         {
           type: 'text',
           text: util_or_since,
@@ -203,23 +203,23 @@ class LinebotController < ApplicationController
           align: 'center'
         }
       ]
-      message_array3.push(post.start_date.to_s)
-      message_array2.push(post.content)
-      message_array.push(sample)
+      message_array.push(message_content)
+      content_array.push(post.content)
+      start_date_array.push(post.start_date.to_s)
     end
-    [message_array, message_array2, message_array3]
+    [message_array, content_array, start_date_array]
   end
 
-  def create_flex_message(message_array, message_array2, message_array3)
+  def create_flex_message(message_array, content_array, start_date_array)
     contents = []
-    message_array.zip(message_array2, message_array3) do |ma, ma2, ma3|
+    message_array.zip(content_array, start_date_array) do |message, content, start_date|
       ct = {
         type: 'bubble',
         size: 'micro',
         body: {
           type: 'box',
           layout: 'vertical',
-          contents: ma,
+          contents: message,
           backgroundColor: '#7f7fff'
         },
         footer: {
@@ -230,7 +230,7 @@ class LinebotController < ApplicationController
             action: {
               type: 'postback',
               label: '削除',
-              data: 'content::' + ma2 + 'content::' + ma3
+              data: 'content::' + content + 'content::' + start_date
             }
           ],
           paddingTop: '0px',
@@ -239,14 +239,14 @@ class LinebotController < ApplicationController
       }
       contents.push(ct)
     end
-    messages = [{
+    flex_message = [{
       "type": 'flex',
-      "altText": '*',
+      "altText": '一覧',
       "contents": {
         'type': 'carousel',
         'contents': contents
       }
     }]
-    messages
+    flex_message
   end
 end
