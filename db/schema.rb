@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2020_05_28_054715) do
     t.date "start_date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "content", "start_date"], name: "index_posts_on_user_id_and_content_and_start_date", unique: true
   end
 
 end
